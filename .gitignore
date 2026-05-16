@@ -19,5 +19,7 @@ rad.json
 #License-files
 *.bclicense
 *.flf
+node_modules/
+.env
 #Test results file
 TestResults.xml
