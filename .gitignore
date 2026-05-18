@@ -21,5 +21,6 @@ rad.json
 *.flf
 node_modules/
 .env
+.prod.env
 #Test results file
 TestResults.xml
