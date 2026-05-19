@@ -33,6 +33,7 @@ export const up = (pgm) => {
         },
     });
 
+    pgm.addConstraint('document_parsing', 'unique_document_parsing', 'UNIQUE(document_id)');
     pgm.addConstraint(
         'document_parsing',
         'fk_document_parsing.document_id_documents.id',

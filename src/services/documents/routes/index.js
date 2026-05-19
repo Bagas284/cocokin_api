@@ -3,10 +3,13 @@ import {
     addDocument, getAllDocument,
 } from '../controller/document-controller.js';
 import upload from '../../../middlewares/upload.js';
+import authenticateToken from '../../../middlewares/auth.js';
+import { validate } from '../../../middlewares/validate.js';
+import { documentPayloadSchema } from '../validator/schema.js';
 
 const router = express.Router();
 
-router.post('/documents', upload.single('file'), addDocument);
-router.get('/documents', getAllDocument);
+router.post('/documents', authenticateToken, upload.single('file'), validate(documentPayloadSchema), addDocument);
+router.get('/documents', authenticateToken, getAllDocument);
 
 export default router;

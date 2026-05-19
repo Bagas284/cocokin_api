@@ -6,6 +6,8 @@ import parseDocument from '../../../utils/parse-document.js';
 import cleanText from '../../../utils/clean-text.js';
 
 export const addDocument = async(req, res, next) => {
+    const { id: user_id } = req.user;
+    const { target_role, portofolio_url } = req.validated;
     if (!req.file) {
       return next(new InvariantError('File wajib diupload'));
     }
@@ -15,6 +17,9 @@ export const addDocument = async(req, res, next) => {
       file_url: `/uploads/${req.file.filename}`,
       size: req.file.size,
       mime_type: req.file.mimetype,
+      target_role,
+      portofolio_url,
+      user_id,
     };
 
     //POST ke table documents
@@ -29,12 +34,13 @@ export const addDocument = async(req, res, next) => {
     extractedText = cleanText(extractedText);
 
     //POST ke table document_parsing
-    const parsing = await DocumentParsingRepositories.addParsing({ document_id: doc.id, extracted_text: extractedText });
+    await DocumentParsingRepositories.addParsing({ document_id: doc.id, extracted_text: extractedText });
 
     return response(res, 201, 'File berhasil ditambahkan', doc);
 }
 
 export const getAllDocument = async(req, res, next) => {
-  const doc = await DocumentRepositories.getAllDocument();
+  const { id: user_id } = req.user;
+  const doc = await DocumentRepositories.getAllDocument(user_id);
   return response(res, 200, 'File sukses ditampilkan', doc);
 }

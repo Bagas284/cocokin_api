@@ -9,32 +9,21 @@ export const shorthands = undefined;
  * @returns {Promise<void> | void}
  */
 export const up = (pgm) => {
-    pgm.createTable('documents', {
+    pgm.createTable('users', {
         id: {
             type: 'VARCHAR(50)',
             primaryKey: true,
         },
-        file_name: {
+        name: {
             type: 'TEXT',
             notNull: true,
         },
-        file_url: {
-            type: 'TEXT',
+        email: {
+            type: 'VARCHAR(50)',
             notNull: true,
+            unique: true,
         },
-        size: {
-            type: 'INT',
-            notNull: true
-        },
-        mime_type: {
-            type: 'TEXT',
-            notNull: true,
-        },
-        target_role: {
-            type: 'TEXT',
-            notNull: false,
-        },
-        portofolio_url: {
+        password: {
             type: 'TEXT',
             notNull: true,
         },
@@ -55,5 +44,5 @@ export const up = (pgm) => {
  * @returns {Promise<void> | void}
  */
 export const down = (pgm) => {
-    pgm.dropTable('documents');
+    pgm.dropTable('users');
 };
