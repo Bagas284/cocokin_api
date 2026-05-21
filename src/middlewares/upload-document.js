@@ -1,16 +1,7 @@
 import multer from 'multer';
-import path from 'path';
 import { InvariantError } from '../exceptions/index.js';
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'src/uploads/documents');
-  },
-  filename: (req, file, cb) => {
-    const uniqueName = `${Date.now()}-${file.originalname}`;
-    cb(null, uniqueName);
-  },
-});
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
   const allowedMimes = [

@@ -1,36 +1,40 @@
-import fs from 'fs';
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
 import mammoth from 'mammoth';
 
 const parseDocument = async (file) => {
 
-  const filePath = file.path;
+    let extractedText = '';
 
-  let extractedText = '';
+    // PDF
+    if (file.mimetype === 'application/pdf') {
 
-  if (file.mimetype === 'application/pdf') {
+        const pdf = await pdfjsLib.getDocument({
+            data: new Uint8Array(file.buffer),
+        }).promise;
 
-    const dataBuffer = fs.readFileSync(filePath);
+        for (let i = 1; i <= pdf.numPages; i++) {
 
-    const pdf = await pdfjsLib.getDocument({
-      data: new Uint8Array(dataBuffer),
-    }).promise;
+            const page = await pdf.getPage(i);
 
-    for (let i = 1; i <= pdf.numPages; i++) {
+            const textContent = await page.getTextContent();
 
-      const page = await pdf.getPage(i);
+            const pageText = textContent.items
+                .map(item => item.str)
+                .join(' ');
 
-      const textContent = await page.getTextContent();
+            extractedText += pageText + ' ';
+        }
 
-      const pageText = textContent.items
-        .map(item => item.str)
-        .join(' ');
-
-      extractedText += pageText + ' ';
     }
-  } else if (file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+
+    // DOCX
+    else if (
+        file.mimetype ===
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ) {
+
         const result = await mammoth.extractRawText({
-            path: filePath,
+            buffer: file.buffer,
         });
 
         extractedText = result.value;
