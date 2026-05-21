@@ -3,8 +3,7 @@ import response from '../../../utils/response.js';
 import InvariantError from '../../../exceptions/invariant-error.js';
 import NotFoundError from '../../../exceptions/not-found-error.js';
 import AuthorizationError from '../../../exceptions/authorization-error.js';
-import deleteFile from '../../../utils/delete-file.js';
-import path from 'path';
+import cloudinary from '../../../config/cloudinary.js';
 
 export const getProfileByUserId = async (req, res, next) => {
     const { id } = req.params;
@@ -65,20 +64,22 @@ export const updatePhotoByUserId = async (req, res, next) => {
 
     const oldProfile = await ProfileRepositories.getPhotoByUserId(id);
 
-    if (
-        oldProfile?.photo_profile &&
-        oldProfile.photo_profile !== 'src/uploads/photos/default-profile.jpg'
-    ) {
-        const oldFilePath = path.join(
-            process.cwd(),
-            oldProfile.photo_profile
-        );
+    if (oldProfile?.photo_profile) {
+        const splitUrl = oldProfile.photo_profile.split('/');
 
-        await deleteFile(oldFilePath);
+        const fileName = splitUrl[splitUrl.length - 1];
+
+        const publicId = `profile-photos/${fileName.split('.')[0]}`;
+
+        try {
+            await cloudinary.uploader.destroy(publicId);
+        } catch (error) {
+            console.log('Gagal menghapus foto lama:', error.message);
+        }
     }
 
     const newPhoto = {
-        photo_profile: `src/uploads/photos/${req.file.filename}`,
+        photo_profile: req.file.path,
         id,
     };
 
@@ -107,9 +108,7 @@ export const getPhotoByUserId = async (req, res, next) => {
 
     const userProfile = await ProfileRepositories.getPhotoByUserId(id);
 
-    const filePath = userProfile.photo_profile
-        ? path.join(process.cwd(), userProfile.photo_profile)
-        : path.join(process.cwd(), 'src/uploads/photos/default-profile.jpg');
-
-    return res.download(filePath);
+    return response(res, 200, 'Foto profile berhasil diambil', {
+        photo_profile: userProfile.photo_profile || 'https://res.cloudinary.com/dn6htf6bs/image/upload/v1779377064/default-profile_du5nhh.webp',
+    });
 }
