@@ -4,7 +4,7 @@ import { InvariantError } from '../exceptions/index.js';
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'src/uploads/');
+    cb(null, 'src/uploads/documents');
   },
   filename: (req, file, cb) => {
     const uniqueName = `${Date.now()}-${file.originalname}`;
@@ -26,12 +26,12 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({
+const uploadDocument = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024,
+    fileSize: 10 * 1024 * 1024,
   },
 });
 
-export default upload;
+export default uploadDocument;

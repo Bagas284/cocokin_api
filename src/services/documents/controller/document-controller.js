@@ -14,7 +14,7 @@ export const addDocument = async(req, res, next) => {
 
     const newDoc = {
       file_name: req.file.originalname,
-      file_url: `/uploads/${req.file.filename}`,
+      file_url: `/uploads/documents/${req.file.filename}`,
       size: req.file.size,
       mime_type: req.file.mimetype,
       target_role,

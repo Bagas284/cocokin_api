@@ -9,6 +9,7 @@ class UserRepositories {
 
     async createUser({ name, email, password }) {
         const id = nanoid(16);
+        const profileId = nanoid(16);
         const hashedPassword = await bcrypt.hash(password, 10);
         const createdAt = new Date().toISOString();
         const updatedAt = createdAt;
@@ -19,6 +20,13 @@ class UserRepositories {
         };
         
         const result = await this.pool.query(query);
+
+        const profileQuery = {
+            text: 'INSERT INTO profiles(id, user_id, created_at, updated_at) VALUES($1, $2, $3, $4)',
+            values: [profileId, id, createdAt, updatedAt],
+        };
+
+        await this.pool.query(profileQuery);
         return result.rows[0];
     }
 
@@ -31,17 +39,6 @@ class UserRepositories {
         const result = await this.pool.query(query);
         
         return result.rows.length > 0;
-    }
-
-    async getUserById(id) {
-        const query = {
-            text: 'SELECT * FROM users WHERE id = $1',
-            values: [id],
-        };
-        
-        const result = await this.pool.query(query);
-        
-        return result.rows[0];
     }
 
     async verifyUserCredential(email, password) {    

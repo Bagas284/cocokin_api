@@ -55,25 +55,6 @@ class DocumentRepositories {
         const result = await this.pool.query (query);
         return result.rows;
     }
-
-    async verifyDocumentOwner(id, user_id) {
-        const query = {
-            text: 'SELECT * FROM documents WHERE id = $1',
-            values: [id],
-        };
-
-        const result = await this.pool.query(query);
-
-        if (!result.rows.length) {
-            return null;
-        }
-
-        const doc = result.rows[0];
-        
-        if (doc.user_id !== user_id) {
-            return null;
-        }
-    }
 }
 
 export default new DocumentRepositories();
