@@ -1,12 +1,8 @@
-import { Pool } from "pg";
+import pool from '../../../database/pool.js';
 import { nanoid } from "nanoid";
 import bcrypt from 'bcrypt';
 
 class UserRepositories {
-    constructor() {
-        this.pool = new Pool();
-    }
-
     async createUser({ name, email, password }) {
         const id = nanoid(16);
         const profileId = nanoid(16);
@@ -19,14 +15,14 @@ class UserRepositories {
             values: [id, name, email, hashedPassword, createdAt, updatedAt],
         };
         
-        const result = await this.pool.query(query);
+        const result = await pool.query(query);
 
         const profileQuery = {
             text: 'INSERT INTO profiles(id, user_id, created_at, updated_at) VALUES($1, $2, $3, $4)',
             values: [profileId, id, createdAt, updatedAt],
         };
 
-        await this.pool.query(profileQuery);
+        await pool.query(profileQuery);
         return result.rows[0];
     }
 
@@ -36,7 +32,7 @@ class UserRepositories {
             values: [email],
         };
         
-        const result = await this.pool.query(query);
+        const result = await pool.query(query);
         
         return result.rows.length > 0;
     }
@@ -47,7 +43,7 @@ class UserRepositories {
             values: [email],
         };
         
-        const user = await this.pool.query(query);
+        const user = await pool.query(query);
         if (!user) {
             return null;
         }

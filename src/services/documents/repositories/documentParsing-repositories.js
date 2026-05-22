@@ -1,11 +1,7 @@
-import { Pool } from 'pg';
+import pool from '../../../database/pool.js';
 import { nanoid } from 'nanoid';
 
 class DocumentParsingRepositories {
-    constructor() {
-        this.pool = new Pool();
-    }
-
     async addParsing({ document_id, extracted_text }) {
         const id = nanoid(16);
         const createdAt = new Date().toISOString();
@@ -23,7 +19,7 @@ class DocumentParsingRepositories {
             ],
         };
 
-        const result = await this.pool.query(query);
+        const result = await pool.query(query);
         return result.rows[0];
     }
 }

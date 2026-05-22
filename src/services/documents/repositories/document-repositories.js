@@ -1,11 +1,7 @@
-import { Pool } from 'pg';
+import pool from '../../../database/pool.js';
 import { nanoid } from "nanoid";
 
 class DocumentRepositories {
-    constructor() {
-        this.pool = new Pool();
-    }
-
     async addDocument ({ file_name, file_url, size, mime_type, target_role, portofolio_url, user_id }) {
         const id = nanoid(16);
         const createdAt = new Date().toISOString();
@@ -28,7 +24,7 @@ class DocumentRepositories {
             values: [id, file_name, file_url, size, mime_type, target_role, portofolio_url, createdAt, updatedAt, user_id],
         };
 
-        const result = await this.pool.query(query);
+        const result = await pool.query(query);
         return result.rows[0];
     }
 
@@ -52,7 +48,7 @@ class DocumentRepositories {
                 WHERE d.user_id = $1`,
             values: [user_id]
             }
-        const result = await this.pool.query (query);
+        const result = await pool.query (query);
         return result.rows;
     }
 }

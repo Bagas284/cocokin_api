@@ -1,10 +1,6 @@
-import { Pool } from "pg";
+import pool from '../../../database/pool.js';
 
 class ProfileRepositories {
-    constructor() {
-        this.pool = new Pool();
-    }
-
     async getProfileByUserId(id) {
         const query = {
             text: `
@@ -24,7 +20,7 @@ class ProfileRepositories {
             values: [id],
         };
         
-        const result = await this.pool.query(query);
+        const result = await pool.query(query);
         
         return result.rows[0];
     }
@@ -46,7 +42,7 @@ class ProfileRepositories {
             values: [bio, location, updatedAt, id],
         };
 
-        const result = await this.pool.query(query);
+        const result = await pool.query(query);
 
         return result.rows[0];
     }
@@ -68,7 +64,7 @@ class ProfileRepositories {
             values: [photo_profile, updatedAt, id],
         };
 
-        const result = await this.pool.query(query);
+        const result = await pool.query(query);
 
         return result.rows[0];
     }
@@ -86,7 +82,7 @@ class ProfileRepositories {
             values: [id],
         };
 
-        const result = await this.pool.query(query);
+        const result = await pool.query(query);
         
         return result.rows[0];
     }
@@ -103,7 +99,7 @@ class ProfileRepositories {
             values: [id],
         };
 
-        const result = await this.pool.query(query);
+        const result = await pool.query(query);
         if (!result.rows.length) {
             return null;
         }

@@ -1,17 +1,13 @@
-import { Pool } from 'pg';
+import pool from '../../../database/pool.js';
  
 class AuthenticationRepositories {
-    constructor() {
-        this.pool = new Pool();
-    }
-    
     async addRefreshToken(token) {    
         const query = {
             text: 'INSERT INTO authentications VALUES($1)',
             values: [token],
         };
         
-        await this.pool.query(query);
+        await pool.query(query);
     }
 
     async deleteRefreshToken(token) {
@@ -19,7 +15,7 @@ class AuthenticationRepositories {
             text: 'DELETE FROM authentications WHERE token = $1',
             values: [token],
         };
-        await this.pool.query(query);
+        await pool.query(query);
     }
 
     async verifyRefreshToken(token) {
@@ -28,7 +24,7 @@ class AuthenticationRepositories {
             values: [token],
         };
 
-        const result = await this.pool.query(query);
+        const result = await pool.query(query);
         if (!result.rows.length) {
             return false;
         }
