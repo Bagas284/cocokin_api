@@ -7,6 +7,13 @@ import AuthenticationError from '../../../exceptions/authorization-error.js';
 
 export const login = async (req, res, next) => {
     const { email, password } = req.validated;
+
+    const user = await UserRepositories.getUserByEmail(email);
+
+    if (!user) {
+        return next(new AuthenticationError('Email belum terdaftar, silakan register terlebih dahulu'));
+    }
+
     const userId = await UserRepositories.verifyUserCredential(email, password);
     
     if (!userId) {

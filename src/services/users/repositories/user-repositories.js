@@ -56,6 +56,21 @@ class UserRepositories {
         }
         return id;
     }
+
+    async getUserByEmail(email) {
+        const query = {
+            text: 'SELECT id, email FROM users WHERE email = $1',
+            values: [email],
+        };
+
+        const result = await pool.query(query);
+
+        if (!result.rows.length) {
+            return null;
+        }
+
+        return result.rows[0];
+    }
 }
 
 export default new UserRepositories();
