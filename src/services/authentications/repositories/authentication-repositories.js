@@ -1,10 +1,12 @@
 import pool from '../../../database/pool.js';
+import { nanoid } from 'nanoid';
  
 class AuthenticationRepositories {
     async addRefreshToken(token) {    
+        const id = nanoid(16);
         const query = {
-            text: 'INSERT INTO authentications VALUES($1)',
-            values: [token],
+            text: 'INSERT INTO authentications VALUES($1, $2)',
+            values: [id, token],
         };
         
         await pool.query(query);
