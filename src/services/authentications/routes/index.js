@@ -9,8 +9,8 @@ import {
  
 const router = Router();
  
-router.post('/authentications', validate(postAuthenticationPayloadSchema), login);
+router.post('/login', validate(postAuthenticationPayloadSchema), login);
 router.put('/authentications', validate(putAuthenticationPayloadSchema), refreshToken);
-router.delete('/authentications', validate(deleteAuthenticationPayloadSchema), logout);
+router.delete('/logout', validate(deleteAuthenticationPayloadSchema), logout);
  
 export default router;
