@@ -2,7 +2,7 @@ import pool from '../../../database/pool.js';
 import { nanoid } from "nanoid";
 
 class DocumentRepositories {
-    async addDocument ({ file_name, file_url, size, mime_type, target_role, portofolio_url, user_id }) {
+    async addDocument ({ file_name, file_url, size, mime_type, target_role, user_id }) {
         const id = nanoid(16);
         const createdAt = new Date().toISOString();
         const updatedAt = createdAt;
@@ -16,12 +16,11 @@ class DocumentRepositories {
                 size, 
                 mime_type, 
                 target_role, 
-                portofolio_url, 
                 created_at, 
                 updated_at, 
                 user_id
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
-            values: [id, file_name, file_url, size, mime_type, target_role, portofolio_url, createdAt, updatedAt, user_id],
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+            values: [id, file_name, file_url, size, mime_type, target_role, createdAt, updatedAt, user_id],
         };
 
         const result = await pool.query(query);
@@ -38,7 +37,6 @@ class DocumentRepositories {
                     d.size,
                     d.mime_type,
                     d.target_role,
-                    d.portofolio_url,
 
                     dp.id AS parsing_id,
                     dp.extracted_text

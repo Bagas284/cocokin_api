@@ -34,10 +34,6 @@ export const up = (pgm) => {
             type: 'TEXT',
             notNull: false,
         },
-        portofolio_url: {
-            type: 'TEXT',
-            notNull: true,
-        },
         created_at: {
             type: 'TEXT',
             notNull: true,

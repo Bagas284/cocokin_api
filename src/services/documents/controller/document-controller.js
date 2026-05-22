@@ -8,7 +8,7 @@ import uploadDocumentCloudinary from '../../../utils/upload-document-cloudinary.
 
 export const addDocument = async(req, res, next) => {
     const { id: user_id } = req.user;
-    const { target_role, portofolio_url } = req.validated;
+    const { target_role } = req.validated;
 
     if (!req.file) {
       return next(new InvariantError('File wajib diupload'));
@@ -25,7 +25,6 @@ export const addDocument = async(req, res, next) => {
       size: req.file.size,
       mime_type: req.file.mimetype,
       target_role,
-      portofolio_url,
       user_id,
     };
 
