@@ -22,7 +22,7 @@ export const forgotPassword = async(req, res, next) => {
     const hashedOTP = await bcrypt.hash(otp, 6);
 
     const expiredAt = new Date(
-        Date.now() + 2 * 60 * 1000
+        Date.now() + 5 * 60 * 1000
     );
 
     const addOTP = await PasswordRepositories.createOTP({

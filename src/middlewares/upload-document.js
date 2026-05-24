@@ -6,14 +6,12 @@ const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
   const allowedMimes = [
     'application/pdf',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/msword',
   ];
 
   if (allowedMimes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new InvariantError('Hanya file PDF dan DOCX yang diperbolehkan'), false);
+    cb(new InvariantError('Hanya file PDF yang diperbolehkan'), false);
   }
 };
 
