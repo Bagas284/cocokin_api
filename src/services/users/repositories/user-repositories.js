@@ -26,6 +26,19 @@ class UserRepositories {
         return result.rows[0];
     }
 
+    async updatePassword(userId, password) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const updatedAt = new Date().toISOString();
+
+        const query = {
+            text: 'UPDATE users SET password = $1, updated_at = $2 WHERE id = $3 RETURNING id',
+            values: [hashedPassword, updatedAt, userId],
+        };
+
+        const result = await pool.query(query);
+        return result.rows[0];
+    }
+
     async verifyNewUsername(email) {
         const query = {
             text: 'SELECT email FROM users WHERE email = $1',

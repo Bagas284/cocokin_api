@@ -34,6 +34,7 @@
     "multer-storage-cloudinary": "^4.0.0",
     "nanoid": "^5.1.11",
     "node-pg-migrate": "^8.0.4",
+    "nodemailer": "^8.0.8",
     "pdf-parse": "^1.1.1",
     "pg": "^8.20.0",
     "streamifier": "^0.1.1"
