@@ -5,8 +5,8 @@ import { forgotPassword, verifyOTP, resetPassword } from '../controller/password
 
 const router = Router();
 
-router.post('/forgot-password', validate(emailPayloadSchema), forgotPassword);
-router.post('/verify-otp', validate(otpPayloadSchema), verifyOTP);
-router.post('/reset-password', validate(passwordPayloadSchema), resetPassword);
+router.post('/password/forgot', validate(emailPayloadSchema), forgotPassword);
+router.post('/password/verify', validate(otpPayloadSchema), verifyOTP);
+router.post('/password/reset', validate(passwordPayloadSchema), resetPassword);
 
 export default router;

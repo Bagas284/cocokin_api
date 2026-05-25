@@ -61,7 +61,7 @@ export const mapAnalysisData = (docId, aiResult) => ({
     aiResult.experience_gap_years || null,
 
   edu_gap:
-    aiResult.edu_gap || null,
+    aiResult.edu_gap || 0,
 
   matched_skills: JSON.stringify(
     aiResult.matched_skills || []
