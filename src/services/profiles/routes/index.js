@@ -7,9 +7,9 @@ import uploadPhoto from "../../../middlewares/upload-photo.js";
 
 const router = Router();
 
-router.get('/profile/:id', authenticateToken, getProfileByUserId);
-router.put('/profile/:id', authenticateToken, validate(profilePayloadSchema), updateProfileByUserId);
-router.put('/profile/photo/:id', authenticateToken, uploadPhoto.single('photo'), updatePhotoByUserId);
-router.get('/profile/photo/:id', authenticateToken, getPhotoByUserId);
+router.get('/profile/me', authenticateToken, getProfileByUserId);
+router.put('/profile/me', authenticateToken, validate(profilePayloadSchema), updateProfileByUserId);
+router.put('/profile/photo/me', authenticateToken, uploadPhoto.single('photo'), updatePhotoByUserId);
+router.get('/profile/photo/me', authenticateToken, getPhotoByUserId);
 
 export default router;

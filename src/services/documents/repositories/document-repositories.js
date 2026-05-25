@@ -19,7 +19,7 @@ class DocumentRepositories {
                 created_at, 
                 updated_at, 
                 user_id
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`,
             values: [id, file_name, file_url, size, mime_type, target_role, createdAt, updatedAt, user_id],
         };
 
@@ -36,18 +36,48 @@ class DocumentRepositories {
                     d.file_url,
                     d.size,
                     d.mime_type,
-                    d.target_role,
-
-                    dp.id AS parsing_id,
-                    dp.extracted_text
+                    d.target_role
                 FROM documents d
-                LEFT JOIN document_parsing dp
-                    ON dp.document_id = d.id
                 WHERE d.user_id = $1`,
             values: [user_id]
             }
         const result = await pool.query (query);
         return result.rows;
+    }
+
+    async verifyDocumentOwner(documentId, user_id) {
+        const query = {
+            text: `
+                SELECT *
+                FROM documents
+                WHERE id = $1
+            `,
+            values: [documentId],
+        };
+
+        const result = await pool.query(query);
+
+        if (!result.rows.length) {
+            return null; // document benar-benar tidak ada
+        }
+
+        const document = result.rows[0];
+
+        if (document.user_id !== user_id) {
+            return false; // document ada tapi bukan pemilik
+        }
+
+        return document;
+    }
+
+    async getDocumentById(id) {
+        const query = {
+            text: 'SELECT * FROM documents WHERE id = $1',
+            values: [id],
+        };
+
+        const result = await pool.query(query);
+        return result.rows[0];
     }
 }
 

@@ -6,63 +6,38 @@ import AuthorizationError from '../../../exceptions/authorization-error.js';
 import cloudinary from '../../../config/cloudinary.js';
 
 export const getProfileByUserId = async (req, res, next) => {
-    const { id } = req.params;
     const { id: user_id } = req.user;
 
-    const isOwner = await ProfileRepositories.verifyProfileOwner(id, user_id);
-
-    if (isOwner === null) {
+    const userProfile = await ProfileRepositories.getProfileByUserId(user_id);
+    
+    if (!userProfile) {
         return next(new NotFoundError('User Profile tidak ditemukan'));
     }
-
-    if(isOwner === false) {
-        return next(new AuthorizationError('Anda tidak berhak mengakses profile ini'));
-    }
-
-    const userProfile = await ProfileRepositories.getProfileByUserId(id);
     
     return response(res, 200, 'User Profile berhasil ditampilkan', userProfile);
 };
 
 export const updateProfileByUserId = async (req, res, next) => {
-    const { id } = req.params;
     const { id: user_id } = req.user;
     const { bio, location } = req.validated;
 
-    const isOwner = await ProfileRepositories.verifyProfileOwner(id, user_id);
+    const userProfile = await ProfileRepositories.updateProfileByUserId({ user_id, bio, location });
 
-    if (isOwner === null) {
-        return next(new NotFoundError('User Profile tidak ditemukan'));
+    if(!userProfile) {
+        return next(new InvariantError('Profile gagal diperbarui'));
     }
-
-    if(isOwner === false) {
-        return next(new AuthorizationError('Anda tidak berhak mengakses profile ini'));
-    }
-
-    const userProfile = await ProfileRepositories.updateProfileByUserId({ id, bio, location });
     
     return response(res, 200, 'User Profile berhasil diperbarui', userProfile);
 };
 
 export const updatePhotoByUserId = async (req, res, next) => {
-    const { id } = req.params;
     const { id: user_id } = req.user;
-
-    const isOwner = await ProfileRepositories.verifyProfileOwner(id, user_id);
-
-    if (isOwner === null) {
-        return next(new NotFoundError('User Profile tidak ditemukan'));
-    }
-
-    if(isOwner === false) {
-        return next(new AuthorizationError('Anda tidak berhak mengakses profile ini'));
-    }
     
     if (!req.file) {
       return next(new InvariantError('File wajib diupload'));
     }
 
-    const oldProfile = await ProfileRepositories.getPhotoByUserId(id);
+    const oldProfile = await ProfileRepositories.getPhotoByUserId(user_id);
 
     if (oldProfile?.photo_profile) {
         const splitUrl = oldProfile.photo_profile.split('/');
@@ -80,7 +55,7 @@ export const updatePhotoByUserId = async (req, res, next) => {
 
     const newPhoto = {
         photo_profile: req.file.path,
-        id,
+        user_id,
     };
 
     const photo = await ProfileRepositories.updatePhotoByUserId(newPhoto);
@@ -93,20 +68,9 @@ export const updatePhotoByUserId = async (req, res, next) => {
 };
 
 export const getPhotoByUserId = async (req, res, next) => {
-    const { id } = req.params;
     const { id: user_id } = req.user;
 
-    const isOwner = await ProfileRepositories.verifyProfileOwner(id, user_id);
-
-    if (isOwner === null) {
-        return next(new NotFoundError('User Profile tidak ditemukan'));
-    }
-
-    if(isOwner === false) {
-        return next(new AuthorizationError('Anda tidak berhak mengakses profile ini'));
-    }
-
-    const userProfile = await ProfileRepositories.getPhotoByUserId(id);
+    const userProfile = await ProfileRepositories.getPhotoByUserId(user_id);
 
     return response(res, 200, 'Foto profile berhasil diambil', {
         photo_profile: userProfile.photo_profile || 'https://res.cloudinary.com/dn6htf6bs/image/upload/v1779377064/default-profile_du5nhh.webp',

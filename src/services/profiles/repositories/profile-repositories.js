@@ -1,7 +1,7 @@
 import pool from '../../../database/pool.js';
 
 class ProfileRepositories {
-    async getProfileByUserId(id) {
+    async getProfileByUserId(user_id) {
         const query = {
             text: `
             SELECT
@@ -17,7 +17,7 @@ class ProfileRepositories {
                 ON u.id = p.user_id
             WHERE u.id = $1
             `,
-            values: [id],
+            values: [user_id],
         };
         
         const result = await pool.query(query);
@@ -25,7 +25,7 @@ class ProfileRepositories {
         return result.rows[0];
     }
 
-    async updateProfileByUserId({ id, bio, location }) {
+    async updateProfileByUserId({ user_id, bio, location }) {
         const updatedAt = new Date().toISOString();
 
         const query = {
@@ -39,7 +39,7 @@ class ProfileRepositories {
                 WHERE users.id = profiles.user_id AND users.id = $4 
                 RETURNING users.id
             `,
-            values: [bio, location, updatedAt, id],
+            values: [bio, location, updatedAt, user_id],
         };
 
         const result = await pool.query(query);
@@ -47,7 +47,7 @@ class ProfileRepositories {
         return result.rows[0];
     }
 
-    async updatePhotoByUserId({ photo_profile, id}) {
+    async updatePhotoByUserId({ photo_profile, user_id}) {
         const createdAt = new Date().toISOString();
         const updatedAt = createdAt;
 
@@ -61,7 +61,7 @@ class ProfileRepositories {
                 WHERE users.id = profiles.user_id AND users.id = $3 
                 RETURNING users.id
             `,
-            values: [photo_profile, updatedAt, id],
+            values: [photo_profile, updatedAt, user_id],
         };
 
         const result = await pool.query(query);
@@ -69,7 +69,7 @@ class ProfileRepositories {
         return result.rows[0];
     }
 
-    async getPhotoByUserId(id) {
+    async getPhotoByUserId(user_id) {
         const query = {
             text: `
             SELECT
@@ -79,37 +79,11 @@ class ProfileRepositories {
                 ON u.id = p.user_id
             WHERE u.id = $1
             `,
-            values: [id],
+            values: [user_id],
         };
 
         const result = await pool.query(query);
         
-        return result.rows[0];
-    }
-
-    async verifyProfileOwner(id, user_id){
-        const query = {
-            text: `
-            SELECT *
-            FROM users u
-            JOIN profiles p
-                ON u.id = p.user_id
-            WHERE u.id = $1
-            `,
-            values: [id],
-        };
-
-        const result = await pool.query(query);
-        if (!result.rows.length) {
-            return null;
-        }
-
-        const profile = result.rows[0];
-
-        if (profile.user_id !== user_id){
-            return false;
-        }
-
         return result.rows[0];
     }
 }
