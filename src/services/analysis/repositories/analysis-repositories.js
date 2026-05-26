@@ -74,6 +74,104 @@ class AnalysisRepositories{
         const result = await pool.query(query);
         return result.rows[0];
     }
+
+    async getAllAnalysis(user_id) {
+        const query = {
+            text: `
+                SELECT 
+                    a.id,
+                    a.document_id,
+                    a.filename,
+                    json_build_object(
+                        'industry_sector_cand', a.industry_sector_cand,
+                        'cand_tech_skills', a.cand_tech_skills,
+                        'cand_soft_skills', a.cand_soft_skills,
+                        'experience_years', a.experience_years,
+                        'education_level_cand', a.education_level_cand
+                    ) AS extracted_profile,
+                    a.extracted_text_preview,
+                    a.target_role,
+                    a.match_score_percent,
+                    a.fit_category,
+                    a.missing_skills,
+                    a.matched_skills,
+                    a.experience_gap_years,
+                    a.edu_gap,
+                    a.reasoning,
+                    a.recommendations
+                FROM analysis_results a
+                JOIN documents d
+                    ON a.document_id = d.id
+                WHERE d.user_id = $1
+            `,
+            values: [user_id],
+        };
+
+        const result = await pool.query(query);
+        return result.rows;
+    }
+
+    async getAnalysisById(id) {
+        const query = {
+            text: `
+                SELECT
+                    a.id,
+                    a.document_id,
+                    a.filename,
+                    json_build_object(
+                        'industry_sector_cand', a.industry_sector_cand,
+                        'cand_tech_skills', a.cand_tech_skills,
+                        'cand_soft_skills', a.cand_soft_skills,
+                        'experience_years', a.experience_years,
+                        'education_level_cand', a.education_level_cand
+                    ) AS extracted_profile,
+                    a.extracted_text_preview,
+                    a.target_role,
+                    a.match_score_percent,
+                    a.fit_category,
+                    a.missing_skills,
+                    a.matched_skills,
+                    a.experience_gap_years,
+                    a.edu_gap,
+                    a.reasoning,
+                    a.recommendations
+                FROM analysis_results a
+                JOIN documents d
+                    ON a.document_id = d.id
+                WHERE a.id = $1
+            `,
+            values: [id],
+        }
+
+        const result = await pool.query(query);
+        return result.rows[0];
+    }
+
+    async verifyAnalysisOwner(id, user_id) {
+        const query = {
+            text: `
+                SELECT * FROM analysis_results a
+                JOIN documents d
+                    ON a.document_id = d.id
+                WHERE a.id = $1
+            `,
+            values: [id],
+        }
+
+        const result = await pool.query(query);
+
+        if (!result.rows.length) {
+            return null; // analysis benar-benar tidak ada
+        }
+
+        const analysis = result.rows[0];
+
+        if (analysis.user_id !== user_id) {
+            return false; // analysis ada tapi bukan pemilik
+        }
+
+        return analysis;
+    }
 }
 
 export default new AnalysisRepositories();
