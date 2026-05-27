@@ -36,8 +36,11 @@ class DocumentRepositories {
                     d.file_url,
                     d.size,
                     d.mime_type,
-                    d.target_role
+                    d.target_role,
+                    a.id AS analysis_id
                 FROM documents d
+                JOIN analysis_results a
+                    ON d.id = a.document_id
                 WHERE d.user_id = $1`,
             values: [user_id]
             }
@@ -72,7 +75,19 @@ class DocumentRepositories {
 
     async getDocumentById(id) {
         const query = {
-            text: 'SELECT * FROM documents WHERE id = $1',
+            text: `SELECT
+                    d.id,
+                    d.file_name,
+                    d.file_url,
+                    d.size,
+                    d.mime_type,
+                    d.target_role,
+                    a.id AS analysis_id
+                FROM documents d
+                JOIN analysis_results a
+                    ON d.id = a.document_id 
+                WHERE d.id = $1
+            `,
             values: [id],
         };
 
