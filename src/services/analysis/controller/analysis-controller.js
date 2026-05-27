@@ -5,7 +5,9 @@ import AuthorizationError from '../../../exceptions/authorization-error.js';
 
 export const getAllAnalysis = async(req, res, next) => {
     const { id: user_id } = req.user;
-    const analysis = await AnalysisRepositories.getAllAnalysis(user_id);
+    const { keyword } = req.query;
+
+    const analysis = await AnalysisRepositories.getAllAnalysis(user_id, keyword);
     return response(res, 200, 'Analysis berhasil ditampilkan', analysis);
 }
 

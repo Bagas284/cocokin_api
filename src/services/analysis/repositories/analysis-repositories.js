@@ -75,7 +75,7 @@ class AnalysisRepositories{
         return result.rows[0];
     }
 
-    async getAllAnalysis(user_id) {
+    async getAllAnalysis(user_id, keyword = '') {
         const query = {
             text: `
                 SELECT 
@@ -98,13 +98,20 @@ class AnalysisRepositories{
                     a.experience_gap_years,
                     a.edu_gap,
                     a.reasoning,
-                    a.recommendations
+                    a.recommendations,
+                    a.created_at
                 FROM analysis_results a
                 JOIN documents d
                     ON a.document_id = d.id
                 WHERE d.user_id = $1
+                AND (
+                    $2 = ''
+                    OR a.filename ILIKE $3
+                    OR a.target_role ILIKE $3
+                )
+                ORDER BY a.created_at DESC
             `,
-            values: [user_id],
+            values: [user_id, keyword, `%${keyword}%`],
         };
 
         const result = await pool.query(query);
@@ -134,7 +141,8 @@ class AnalysisRepositories{
                     a.experience_gap_years,
                     a.edu_gap,
                     a.reasoning,
-                    a.recommendations
+                    a.recommendations,
+                    a.created_at
                 FROM analysis_results a
                 JOIN documents d
                     ON a.document_id = d.id

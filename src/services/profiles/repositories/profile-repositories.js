@@ -9,6 +9,9 @@ class ProfileRepositories {
                 p.id AS profile_id,
                 u.name,
                 u.email,
+                u.analysis_tokens,
+                u.subscription_status,
+                u.subscription_expired_at,
     
                 p.bio,
                 p.location

@@ -5,6 +5,7 @@ import uploadDocumentCloudinary from '../../../utils/upload-document-cloudinary.
 import AnalysisRepositories from '../../analysis/repositories/analysis-repositories.js';
 import { analyzeCV, mapAnalysisData } from '../../analysis/services/analysis-service.js';
 import AuthorizationError from '../../../exceptions/authorization-error.js';
+import UserRepositories from '../../users/repositories/user-repositories.js';
 import axios from 'axios';
 import FormData from 'form-data';
 
@@ -15,6 +16,14 @@ export const addDocument = async(req, res, next) => {
     if (!req.file) {
       return next(new InvariantError('File wajib diupload'));
     }
+
+    const tokens = await UserRepositories.getTokenUser(user_id);
+
+    if (tokens <= 0) {
+      return next(new InvariantError('Token analisis habis. Silahkan upgrade premium'));
+    }
+
+    await UserRepositories.decreaseToken(user_id);
 
     const cloudinaryResult = await uploadDocumentCloudinary(
         req.file.buffer,

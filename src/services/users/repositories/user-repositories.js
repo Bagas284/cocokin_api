@@ -84,6 +84,40 @@ class UserRepositories {
 
         return result.rows[0];
     }
+
+    async getTokenUser(user_id) {
+        const query = {
+            text: `
+                SELECT analysis_tokens
+                FROM users
+                WHERE id = $1
+            `,
+            values: [user_id],
+        };
+
+        
+        const result = await pool.query(query);
+
+        if (!result.rows.length) {
+            throw new Error('User tidak ditemukan');
+        }
+
+        return result.rows[0].analysis_tokens;
+    }
+
+    async decreaseToken(user_id) {
+        const updatedAt = new Date().toISOString();
+        const query = {
+            text: `
+                UPDATE users
+                SET analysis_tokens = analysis_tokens - 1, updated_at = $1
+                WHERE id = $2
+            `,
+            values: [updatedAt, user_id]
+        };
+
+        await pool.query(query);
+    }
 }
 
 export default new UserRepositories();
