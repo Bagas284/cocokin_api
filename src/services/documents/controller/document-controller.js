@@ -17,13 +17,23 @@ export const addDocument = async(req, res, next) => {
       return next(new InvariantError('File wajib diupload'));
     }
 
-    const tokens = await UserRepositories.getTokenUser(user_id);
+    const user = await UserRepositories.getUserById(user_id);
 
-    if (tokens <= 0) {
-      return next(new InvariantError('Token analisis habis. Silahkan upgrade premium'));
+    const isExpired = user.subscription_expired_at && new Date(user.subscription_expired_at) < new Date();
+    
+    if(user.subscription_status === 'Premium User' && isExpired) {
+      await UserRepositories.downgradeExpiredSubscription(user_id);
     }
+    
+    const isPremiumActive = user.subscription_status === 'Premium User' && user.subscription_expired_at && new Date(user.subscription_expired_at) > new Date();;
 
-    await UserRepositories.decreaseToken(user_id);
+    if(!isPremiumActive){
+      if (user.analysis_tokens <= 0) {
+        return next(new InvariantError('Token analisis habis. Silahkan upgrade premium'));
+      }
+
+      await UserRepositories.decreaseToken(user_id);
+    }
 
     const cloudinaryResult = await uploadDocumentCloudinary(
         req.file.buffer,

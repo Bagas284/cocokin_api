@@ -85,26 +85,6 @@ class UserRepositories {
         return result.rows[0];
     }
 
-    async getTokenUser(user_id) {
-        const query = {
-            text: `
-                SELECT analysis_tokens
-                FROM users
-                WHERE id = $1
-            `,
-            values: [user_id],
-        };
-
-        
-        const result = await pool.query(query);
-
-        if (!result.rows.length) {
-            throw new Error('User tidak ditemukan');
-        }
-
-        return result.rows[0].analysis_tokens;
-    }
-
     async decreaseToken(user_id) {
         const updatedAt = new Date().toISOString();
         const query = {
@@ -114,6 +94,61 @@ class UserRepositories {
                 WHERE id = $2
             `,
             values: [updatedAt, user_id]
+        };
+
+        await pool.query(query);
+    }
+
+    async getUserById(user_id) {
+        const query = {
+            text: `
+                SELECT *
+                FROM users
+                WHERE id = $1 
+            `,
+            values: [user_id],
+        };
+
+        const result = await pool.query(query);
+
+        if (!result.rows.length) {
+            throw new Error('User tidak ditemukan');
+        }
+
+        return result.rows[0];
+    }
+
+    async activatePremium(user_id) {
+        const updatedAt = new Date().toISOString();
+
+        const query = {
+            text: `
+                UPDATE users
+                SET
+                    subscription_status = 'Premium User',
+                    subscription_expired_at = NOW() + INTERVAL '1 month',
+                    updated_at = $1
+                WHERE id = $2
+            `,
+            values: [updatedAt, user_id],
+        };
+
+        await pool.query(query);
+    }
+
+    async downgradeExpiredSubscription(user_id) {
+        const updatedAt = new Date().toISOString();
+
+        const query = {
+            text: `
+                UPDATE users
+                SET
+                    subscription_status = 'Free User',
+                    subscription_expired_at = NULL,
+                    updated_at = $1
+                WHERE id = $2
+            `,
+            values: [updatedAt, user_id],
         };
 
         await pool.query(query);
