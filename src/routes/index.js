@@ -6,6 +6,7 @@ import profileUser from '../services/profiles/routes/index.js';
 import resetPassword from '../services/password/routes/index.js';
 import analysis from '../services/analysis/routes/index.js';
 import payments from '../services/payments/routes/index.js';
+import exportPdf from '../services/exportPdf/routes/index.js';
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use('/', profileUser);
 router.use('/', resetPassword);
 router.use('/', analysis);
 router.use('/', payments);
+router.use('/', exportPdf);
 
 export default router
