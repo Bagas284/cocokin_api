@@ -8,6 +8,7 @@ class ExportPdfRepositories {
                     u.name,
                     a.filename,
                     json_build_object(
+                        'candidate_name', a.candidate_name,
                         'industry_sector_cand', a.industry_sector_cand,
                         'cand_tech_skills', a.cand_tech_skills,
                         'cand_soft_skills', a.cand_soft_skills,

@@ -6,7 +6,8 @@ class AnalysisRepositories{
         documentId, 
         fileName, 
         extractText, 
-        targetRole, 
+        targetRole,
+        candidate_name,
         industry_sector_cand, 
         cand_tech_skills,
         cand_soft_skills,
@@ -32,6 +33,7 @@ class AnalysisRepositories{
                 filename, 
                 extracted_text_preview, 
                 target_role, 
+                candidate_name,
                 industry_sector_cand,
                 cand_tech_skills,
                 cand_soft_skills, 
@@ -46,7 +48,7 @@ class AnalysisRepositories{
                 missing_skills,
                 recommendations,
                 created_at
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19) 
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20) 
             RETURNING *`, 
             values: [
                 id, 
@@ -54,6 +56,7 @@ class AnalysisRepositories{
                 fileName, 
                 extractText, 
                 targetRole, 
+                candidate_name,
                 industry_sector_cand, 
                 cand_tech_skills, 
                 cand_soft_skills, 
@@ -83,6 +86,7 @@ class AnalysisRepositories{
                     a.document_id,
                     a.filename,
                     json_build_object(
+                        'candidate_name', a.candidate_name,
                         'industry_sector_cand', a.industry_sector_cand,
                         'cand_tech_skills', a.cand_tech_skills,
                         'cand_soft_skills', a.cand_soft_skills,
@@ -126,6 +130,7 @@ class AnalysisRepositories{
                     a.document_id,
                     a.filename,
                     json_build_object(
+                        'candidate_name', a.candidate_name,
                         'industry_sector_cand', a.industry_sector_cand,
                         'cand_tech_skills', a.cand_tech_skills,
                         'cand_soft_skills', a.cand_soft_skills,

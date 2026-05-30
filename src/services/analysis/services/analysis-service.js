@@ -31,6 +31,9 @@ export const mapAnalysisData = (docId, aiResult) => ({
   extractText: aiResult.extracted_text_preview,
   targetRole: aiResult.target_role,
 
+  candidate_name: 
+    aiResult.extracted_profile?.candidate_name,
+    
   industry_sector_cand:
     aiResult.extracted_profile?.industry_sector_cand || null,
 

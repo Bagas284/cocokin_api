@@ -21,7 +21,7 @@ export const up = (pgm) => {
             notNull: true,
         },
         filename: {
-            type:'VARCHAR(50)',
+            type:'TEXT',
             notNull: true,
         },
         extracted_text_preview: {
@@ -29,75 +29,65 @@ export const up = (pgm) => {
             notNull: false
         },
         target_role: {
-            type: 'VARCHAR(50)',
+            type: 'TEXT',
+            notNull: false,
+        },
+        candidate_name: {
+            type: 'TEXT',
             notNull: false,
         },
         industry_sector_cand: {
-            type: 'VARCHAR(100)',
+            type: 'TEXT',
             notNull: false,
         },
-
         cand_tech_skills: {
             type: 'JSONB',
             notNull: false,
         },
-
         cand_soft_skills: {
             type: 'JSONB',
             notNull: false,
         },
-
         experience_years: {
             type: 'FLOAT',
             notNull: false,
         },
-
         education_level_cand: {
             type: 'VARCHAR(100)',
             notNull: false,
         },
-
-        // hasil analisis
         match_score_percent: {
             type: 'FLOAT',
             notNull: false,
         },
-
         fit_category: {
-            type: 'VARCHAR(50)',
+            type: 'TEXT',
             notNull: false,
         },
-
         reasoning: {
             type: 'TEXT',
             notNull: false,
         },
-
         experience_gap_years: {
             type: 'FLOAT',
             notNull: false,
         },
-
         edu_gap: {
             type: 'FLOAT',
             notNull: false,
         },
-
         matched_skills: {
             type: 'JSONB',
             notNull: false,
         },
-
         missing_skills: {
             type: 'JSONB',
             notNull: false,
         },
-
         recommendations: {
             type: 'JSONB',
             notNull: false,
         },
-
         created_at: {
             type: 'TEXT',
             notNull: true,

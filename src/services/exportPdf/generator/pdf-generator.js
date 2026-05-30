@@ -48,6 +48,11 @@ const generatePdfBuffer = async (analysis) => {
         doc.fontSize(17).text('Extracted Profile');
         doc.moveDown(0.5);
         doc.fontSize(13);
+        if(analysis.extracted_profile.candidate_name === null) {
+            doc.text(`Candidate Name : -`);
+        } else {
+            doc.text(`Candidate Name : ${analysis.extracted_profile.candidate_name}`);
+        }
         doc.text(`Industry Sector : ${analysis.extracted_profile.industry_sector_cand}`);
         doc.text(`Experience Years : ${analysis.extracted_profile.experience_years}`);
         doc.text(`Education Level : ${analysis.extracted_profile.education_level_cand}`);
