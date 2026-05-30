@@ -21,11 +21,11 @@ export const addDocument = async(req, res, next) => {
 
     const isExpired = user.subscription_expired_at && new Date(user.subscription_expired_at) < new Date();
     
-    if(user.subscription_status === 'Premium User' && isExpired) {
+    if(user.subscription_status === 'Premium Plan' && isExpired) {
       await UserRepositories.downgradeExpiredSubscription(user_id);
     }
     
-    const isPremiumActive = user.subscription_status === 'Premium User' && user.subscription_expired_at && new Date(user.subscription_expired_at) > new Date();;
+    const isPremiumActive = user.subscription_status === 'Premium Plan' && user.subscription_expired_at && new Date(user.subscription_expired_at) > new Date();;
 
     if(!isPremiumActive){
       if (user.analysis_tokens <= 0) {

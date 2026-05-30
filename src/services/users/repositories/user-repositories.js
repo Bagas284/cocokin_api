@@ -125,7 +125,7 @@ class UserRepositories {
             text: `
                 UPDATE users
                 SET
-                    subscription_status = 'Premium User',
+                    subscription_status = 'Premium Plan',
                     subscription_expired_at = NOW() + INTERVAL '1 month',
                     updated_at = $1
                 WHERE id = $2
@@ -143,7 +143,7 @@ class UserRepositories {
             text: `
                 UPDATE users
                 SET
-                    subscription_status = 'Free User',
+                    subscription_status = 'Free Plan',
                     subscription_expired_at = NULL,
                     updated_at = $1
                 WHERE id = $2

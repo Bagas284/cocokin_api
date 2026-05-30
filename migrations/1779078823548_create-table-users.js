@@ -43,7 +43,7 @@ export const up = (pgm) => {
         subscription_status: {
             type: 'TEXT',
             notNull: true,
-            default: 'Free User',
+            default: 'Free Plan',
         },
         subscription_expired_at: {
             type: 'TEXT',
