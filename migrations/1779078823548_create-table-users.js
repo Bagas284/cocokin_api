@@ -38,7 +38,7 @@ export const up = (pgm) => {
         analysis_tokens: {
             type: 'INTEGER',
             notNull: true,
-            default: 3,
+            default: 1,
         },
         subscription_status: {
             type: 'TEXT',

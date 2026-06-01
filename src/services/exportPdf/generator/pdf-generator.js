@@ -273,13 +273,23 @@ const generatePdfBuffer = async (analysis) => {
                     });
                 });
             }
-            doc.fontSize(13).text(
-                `• Why You Match : ${item.why_you_match}`,
-                {
-                    indent: 20 ,
-                    align: 'justify',
-                }
-            );
+            if(item.why_you_match === null) {
+                doc.fontSize(13).text(
+                    `• Why You Match : -`,
+                    {
+                        indent: 20 ,
+                        align: 'justify',
+                    }
+                );
+            } else {
+                doc.fontSize(13).text(
+                    `• Why You Match : ${item.why_you_match}`,
+                    {
+                        indent: 20 ,
+                        align: 'justify',
+                    }
+                );
+            }
             
             doc.moveDown(0.5);
         });
