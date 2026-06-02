@@ -177,12 +177,21 @@ const generatePdfBuffer = async (analysis) => {
                     indent: 20 
                 }
             );
-            doc.fontSize(13).text(
-                `• Req Soft Skills : ${item.req_soft_skills}`,
-                {
-                    indent: 20 
-                }
-            );
+            if(item.req_soft_skills.length === 0){
+                doc.fontSize(13).text(
+                    `• Req Soft Skills : -`,
+                    {
+                        indent: 20 
+                    }
+                );
+            } else {
+                doc.fontSize(13).text(
+                    `• Req Soft Skills : ${item.req_soft_skills}`,
+                    {
+                        indent: 20 
+                    }
+                );
+            }
             doc.fontSize(13).text(
                 `• Minimum Experience Year : ${item.minimum_experience_years}`,
                 {
@@ -190,13 +199,13 @@ const generatePdfBuffer = async (analysis) => {
                 }
             );
             doc.fontSize(13).text(
-                `• Model Score : ${item.model_score}`,
+                `• Model Score : ${(item.model_score * 100).toFixed(2)}%`,
                 {
                     indent: 20 
                 }
             );
             doc.fontSize(13).text(
-                `• Final Rank Score : ${item.final_rank_score}`,
+                `• Final Rank Score : ${(item.final_rank_score * 100).toFixed(2)}%`,
                 {
                     indent: 20 
                 }
@@ -220,7 +229,7 @@ const generatePdfBuffer = async (analysis) => {
                 }
             );
             doc.fontSize(13).text(
-                `• Weighted Skill Score : ${item.weighted_skill_score}`,
+                `• Weighted Skill Score : ${(item.weighted_skill_score * 100).toFixed(2)}%`,
                 {
                     indent: 20 
                 }
