@@ -19,9 +19,9 @@ export const getProfileByUserId = async (req, res, next) => {
 
 export const updateProfileByUserId = async (req, res, next) => {
     const { id: user_id } = req.user;
-    const { bio, location } = req.validated;
+    const { name, bio, location } = req.validated;
 
-    const userProfile = await ProfileRepositories.updateProfileByUserId({ user_id, bio, location });
+    const userProfile = await ProfileRepositories.updateProfileByUserId({ user_id, name, bio, location });
 
     if(!userProfile) {
         return next(new InvariantError('Profile gagal diperbarui'));

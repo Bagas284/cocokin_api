@@ -28,26 +28,39 @@ class ProfileRepositories {
         return result.rows[0];
     }
 
-    async updateProfileByUserId({ user_id, bio, location }) {
+    async updateProfileByUserId({ user_id, name, bio, location }) {
         const updatedAt = new Date().toISOString();
 
-        const query = {
-            text: `
+        if(name !== undefined) {
+            await pool.query(
+                `
+                    UPDATE users
+                    SET
+                        name = $1,
+                        updated_at = $2
+                    WHERE id = $3
+                `,
+                [name, updatedAt, user_id]
+            )
+        }
+
+        if(bio !== undefined || location !== undefined){
+            await pool.query (
+                `
                 UPDATE profiles 
                 SET 
-                    bio = $1, 
-                    location = $2, 
+                    bio = COALESCE($1, bio), 
+                    location = COALESCE($2, location), 
                     updated_at = $3
                 FROM users
                 WHERE users.id = profiles.user_id AND users.id = $4 
                 RETURNING users.id
             `,
-            values: [bio, location, updatedAt, user_id],
-        };
-
-        const result = await pool.query(query);
-
-        return result.rows[0];
+            [bio, location, updatedAt, user_id],
+            )
+        }
+        
+        return user_id;
     }
 
     async updatePhotoByUserId({ photo_profile, user_id}) {
